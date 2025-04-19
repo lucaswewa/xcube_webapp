@@ -1,85 +1,124 @@
-<script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
-</script>
+<script setup></script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
-  </header>
-
-  <RouterView />
+  <div id="app" class="uk-height-1-1 uk-margin-remove uk-padding-remove"></div>
 </template>
 
-<style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
+<style lang="less">
+// Basic UIkit CSS
+@import '../node_modules/uikit/src/less/uikit.less';
+// Custom UIkit CSS modifications
+@import './assets/less/theme.less';
+
+// We override the custom-electron-titlebar z-index
+// UIKit lightbox must be able to draw over the titlebar
+// as it currently always spawns at the root of the DOM
+.titlebar,
+.titlebar > * {
+  z-index: 1000 !important;
 }
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
+#app {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: left;
+  height: 100%;
 }
 
-nav {
+body,
+html {
+  height: 100%;
+  overflow: hidden;
+}
+
+.uk-disabled {
+  pointer-events: none;
+  opacity: 0.4;
+}
+
+.control-component {
+  overflow-y: auto;
+  overflow-x: hidden;
+  width: 300px;
+  height: 100%;
+  padding: 0;
+  background-color: rgba(180, 180, 180, 0.03);
+  border-width: 0 1px 0 0;
+  border-style: solid;
+  border-color: rgba(180, 180, 180, 0.25);
+}
+
+.view-component {
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: 100%;
+  padding: 0;
+}
+
+.image-fit {
+  height: 80%;
   width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
+  object-fit: contain;
+  overflow-y: clip;
 }
 
-nav a.router-link-exact-active {
-  color: var(--color-text);
+.section-content {
+  padding: 0;
+  height: 100%;
 }
 
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
+// Style tour
+.v-tour__target--highlighted {
+  box-shadow:
+    0px 40px 200px 30px rgba(0, 0, 0, 0.5),
+    0px 0px 0px 4px rgba(128, 128, 128, 0.5) !important;
+  border-radius: 5px;
+  opacity: 100% !important;
+  pointer-events: none !important;
 }
 
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
+.v-step {
+  background: @global-primary-background !important;
 }
 
-nav a:first-of-type {
-  border: 0;
+.v-step__header {
+  background-color: darken(@global-primary-background, 7%) !important;
 }
 
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
+.v-step__button {
+  font-size: 0.9rem !important;
+}
+
+// Change step arrow colour
+// This is awful and hacky and makes me sad, but needs must
+.v-step .v-step__arrow {
+  border-color: darken(@global-primary-background, 7%) !important;
+  &--dark {
+    border-color: darken(@global-primary-background, 7%) !important;
   }
+}
 
-  .logo {
-    margin: 0 2rem 0 0;
-  }
+.v-step[x-placement^='top'] .v-step__arrow {
+  border-left-color: transparent !important;
+  border-right-color: transparent !important;
+  border-bottom-color: transparent !important;
+}
 
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
+.v-step[x-placement^='bottom'] .v-step__arrow {
+  border-left-color: transparent !important;
+  border-right-color: transparent !important;
+  border-top-color: transparent !important;
+}
 
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
+.v-step[x-placement^='right'] .v-step__arrow {
+  border-left-color: transparent !important;
+  border-top-color: transparent !important;
+  border-bottom-color: transparent !important;
+}
 
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
+.v-step[x-placement^='left'] .v-step__arrow {
+  border-top-color: transparent !important;
+  border-right-color: transparent !important;
+  border-bottom-color: transparent !important;
 }
 </style>
