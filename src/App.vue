@@ -1,9 +1,20 @@
 <script setup>
+import { onMounted } from 'vue'
 import { useWotStore } from './stores/wotStore'
 import appContent from './components/appContent.vue'
 import loadingContent from './components/loadingContent.vue'
 
 const wotStore = useWotStore()
+
+onMounted(() => {
+  checkConnection()
+})
+
+async function checkConnection() {
+  wotStore.wot.fetchThingDescriptions('http://localhost:5000/thing_descriptions/').then((tds) => {
+    wotStore.setConnected()
+  })
+}
 </script>
 
 <template>

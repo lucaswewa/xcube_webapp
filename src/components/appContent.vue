@@ -10,12 +10,31 @@
         <!-- For each top tab -->
         <template v-for="(item, index) in topTabs" :key="item.id + '-tab-icon'">
           <!-- Render the tab icon -->
+          <tabIcon
+            :id="item.id + '-tab-icon'"
+            :tab-i-d="item.id"
+            :require-connection="true"
+            :current-tab="state.currentTab"
+            :class="item.class"
+            @set-tab="setTab"
+          >
+            <img
+              v-if="item.iconURL"
+              style="filter: grayscale(100%); width: 22px; margin-top: 5px; margin-bottom: 8px"
+              :src="item.iconURL"
+            />
+            <span v-if="!item.iconURL" class="material-symbols-outlined">
+              {{ item.icon }}
+            </span>
+          </tabIcon>
+          <!-- Add a divider if item.divide is true -->
+          <hr v-if="item.divide" :key="'tab-divider-' + index" />
         </template>
 
         <hr id="extension-tab-divider" />
 
         <!-- For each bottom tab -->
-        <template v-for="(item, index) in bottomTabs" :key="item.id + '-tab-icon'">
+        <template v-for="(item, index) in state.bottomTabs" :key="item.id + '-tab-icon'">
           <!-- Render the tab icon -->
         </template>
       </div>
@@ -24,7 +43,16 @@
     <!-- Corresponding vertical tab content -->
     <div id="container-left" class="uk-padding-remove uk-height-1-1 uk-width-expand">
       <!-- For each top tab -->
-
+      <tabContent
+        v-for="item in topTabs"
+        :id="item.id + '-tab-content'"
+        :key="item.id + '-tab-content'"
+        :tab-i-d="item.id"
+        :require-connection="true"
+        :current-tab="state.currentTab"
+      >
+        <component :is="item.component"></component>
+      </tabContent>
       <!-- For each bottom tab -->
     </div>
   </div>
@@ -32,12 +60,12 @@
 
 <script setup>
 // Import generic components
-// import tabIcon from "./genericComponents/tabIcon";
-// import tabContent from "./genericComponents/tabContent";
+import tabIcon from './genericComponents/tabIcon.vue'
+import tabContent from './genericComponents/tabContent.vue'
 
 // Import new content components
 // import testerContent from "./tabContentComponents/testerContent.vue";
-// import navigateContent from "./tabContentComponents/navigateContent.vue";
+import navigateContent from './tabContentComponents/navigateContent.vue'
 // import settingsContent from "./tabContentComponents/settingsContent.vue";
 // import mtfContent from "./tabContentComponents/mtfContent.vue";
 
@@ -67,7 +95,18 @@ const tabOrder = computed(() => {
 })
 
 const topTabs = computed(() => {
-  var tabs = []
+  var tabs = [
+    {
+      id: 'navigate',
+      icon: 'gamepad',
+      component: navigateContent,
+    },
+    {
+      id: 'navigate1',
+      icon: 'gamepad',
+      component: navigateContent,
+    },
+  ]
   if (!wotStore.galleryEnabled) {
     tabs = tabs.filter((tab) => tab.id != 'gallery')
   }
