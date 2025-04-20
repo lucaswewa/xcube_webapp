@@ -4,6 +4,11 @@
   <div id="app" class="uk-height-1-1 uk-margin-remove uk-padding-remove"></div>
 </template>
 
+<script setup>
+import { useWotStore } from './stores/wotStore'
+
+const wotStore = useWotStore()
+</script>
 <style lang="less">
 // Basic UIkit CSS
 @import '../node_modules/uikit/src/less/uikit.less';
