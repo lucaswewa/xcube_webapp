@@ -35,7 +35,7 @@
 </template>
 
 <script setup>
-import { reactive, computed, onMounted, onBeforeUnmount, useTemplateRef, defineEmits } from 'vue'
+import { reactive, computed, onMounted, onBeforeUnmount, useTemplateRef } from 'vue'
 import { useWotStore } from '@/stores/wotStore'
 
 const emit = defineEmits(['globalMoveInImageCoordinatesEvent'])
@@ -76,13 +76,13 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   // Remove global signal listener to change the GPU preview state
-  this.$root.$off('globalTogglePreview')
+  // this.$root.$off('globalTogglePreview')
   // Remove global signal listener to flash the stream element
-  this.$root.$off('globalFlashStream')
+  // this.$root.$off('globalFlashStream')
   // Disconnect the size observer
   this.sizeObserver.disconnect()
   // Remove from the array of active streams
-  this.$store.commit('removeStream', this._uid)
+  // this.$store.commit('removeStream', this._uid)
 })
 
 function visibilityChanged(isVisible) {
