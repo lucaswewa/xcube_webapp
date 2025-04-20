@@ -16,7 +16,7 @@ function getOriginFromLocation() {
   }
 }
 
-export const useWotStore = defineStore('todos', {
+export const useWotStore = defineStore('wot', {
   state: () => ({
     origin: getOriginFromLocation(),
     available: false,

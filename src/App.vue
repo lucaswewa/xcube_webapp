@@ -1,14 +1,18 @@
-<script setup></script>
-
-<template>
-  <div id="app" class="uk-height-1-1 uk-margin-remove uk-padding-remove"></div>
-</template>
-
 <script setup>
 import { useWotStore } from './stores/wotStore'
+import appContent from './components/appContent.vue'
+import loadingContent from './components/loadingContent.vue'
 
 const wotStore = useWotStore()
 </script>
+
+<template>
+  <div id="app" class="uk-height-1-1 uk-margin-remove uk-padding-remove">
+    <loadingContent v-if="!wotStore.ready" />
+    <appContent v-if="wotStore.ready" />
+  </div>
+</template>
+
 <style lang="less">
 // Basic UIkit CSS
 @import '../node_modules/uikit/src/less/uikit.less';
