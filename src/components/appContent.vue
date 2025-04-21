@@ -67,7 +67,7 @@ import tabContent from './genericComponents/tabContent.vue'
 // import testerContent from "./tabContentComponents/testerContent.vue";
 import navigateContent from './tabContentComponents/navigateContent.vue'
 // import settingsContent from "./tabContentComponents/settingsContent.vue";
-// import mtfContent from "./tabContentComponents/mtfContent.vue";
+import mtfContent from "./tabContentComponents/mtfContent.vue";
 
 // Import modal components for device initialisation
 // import TabIcon from "./genericComponents/tabIcon.vue";
@@ -102,9 +102,9 @@ const topTabs = computed(() => {
       component: navigateContent,
     },
     {
-      id: 'navigate1',
+      id: 'mtf',
       icon: 'gamepad',
-      component: navigateContent,
+      component: mtfContent,
     },
   ]
   if (!wotStore.galleryEnabled) {
