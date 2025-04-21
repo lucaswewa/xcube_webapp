@@ -22,12 +22,6 @@ import { reactive, onMounted } from 'vue'
 
 const wotStore = useWotStore()
 
-async function checkConnection() {
-  wotStore.wot.fetchThingDescriptions('http://localhost:5000/thing_descriptions/').then((tds) => {
-    wotStore.setConnected()
-  })
-}
-
 const state = reactive({
   newOrigin: '',
   reloadWhenOverridingOrigin: false,
@@ -41,7 +35,7 @@ onMounted(() => {
   }
 })
 
-function overrideAPIHost(event) {
+async function overrideAPIHost(event) {
   // Save the origin override, so that if we reload the web app, you can easily
   localStorage.overrideOrigin = state.newOrigin
 
@@ -53,8 +47,7 @@ function overrideAPIHost(event) {
     wotStore.changeOrigin(state.newOrigin)
     event.preventDefault()
   }
-  checkConnection()
-  // wotStore.setConnected()
+  await wotStore.checkConnection()
 }
 </script>
 

@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { WoTClient } from '../wot/wotClient'
+import axios from 'axios'
 
 let wotClient = WoTClient()
 
@@ -16,6 +17,15 @@ function getOriginFromLocation() {
   }
 }
 
+function findFormHref(affordance, op) {
+  // Find the form in the affordance that matches the given operation type
+  if (affordance == undefined) return undefined
+  let forms = affordance.forms
+  let matchingForm = forms.find((f) => f.op == op || f.op.includes(op))
+  if (matchingForm == undefined) return undefined
+  return matchingForm.href
+}
+
 export const useWotStore = defineStore('wot', {
   state: () => ({
     origin: getOriginFromLocation(),
@@ -30,6 +40,7 @@ export const useWotStore = defineStore('wot', {
     appTheme: 'system',
     activeStreams: {},
     microscopeHostname: '',
+    thingDescriptions: {},
   }),
 
   getters: {
@@ -79,6 +90,88 @@ export const useWotStore = defineStore('wot', {
     },
     changeMicroscopeHostname(value) {
       this.microscopeHostname = value
+    },
+    thingDescription(thingName) {
+      return this.thingDescriptions[thingName]
+    },
+    thingAvailable(thingName) {
+      return thingName in this.thingDescriptions
+    },
+    thingFormUrl(thingName, affordanceType, affordance, op, allowUndefined = true) {
+      var td = this.thingDescriptions[thingName]
+      if (!td) {
+        if (allowUndefined) return undefined
+        throw `Count not find form for ${affordanceType} ${thingName}/${affordance} with op ${op}`
+      }
+      var affordances = td[affordanceType]
+      var href = findFormHref(affordances[affordance], op)
+      if (href == undefined) {
+        if (allowUndefined) return undefined
+        throw `Cound not find form for ${affordanceType} ${thingName}/${affordance} with ${op} op`
+      }
+      if (href.startsWith('http')) return href
+      if ('base' in td) {
+        var base = td.base
+        if (href.startsWith('/')) href = href.slice(1)
+        if (!base.endsWith('/')) base += '/'
+        return base + href
+      }
+      return href
+    },
+    thingPropertyUrl(thing, property, op, allowUndefined) {
+      return this.thingFormUrl(thing, 'properties', property, op, allowUndefined)
+    },
+    thingActionUrl(thing, action, op, allowUndefined) {
+      return this.thingFormUrl(thing, 'actions', action, op, allowUndefined)
+    },
+
+    async fetchThingDescription(uri, name = null) {
+      this.wot.fetchThingDescription(uri, name).then((thing) => {
+        this.thingDescriptions[thing.thingName] = thing.thingDescription
+      })
+    },
+    async fetchThingDescriptions(uri) {
+      await this.wot.fetchThingDescriptions(uri).then((things) => {
+        console.log(things)
+        for (const thing of things) {
+          this.thingDescriptions[thing.thingName] = thing.thingDescription
+        }
+      })
+    },
+    async readThingProperty(thing, property, silence_errors = false) {
+      var url = this.thingPropertyUrl(thing, property, 'readproperty', false)
+      try {
+        var response = await axios.get(url)
+        return response.data
+      } catch (error) {
+        if (!silence_errors) this.modelError(error)
+        return undefined
+      }
+    },
+    async writeThingProperty(thing, property, value) {
+      var url = this.thingPropertyUrl(thing, property, 'writeproperty', false)
+      if ((value === false) | (value === true)) {
+        value = JSON.stringify(value)
+      }
+      await axios.put(url, value)
+    },
+    async checkConnection() {
+      await this.fetchThingDescriptions(this.baseUri + '/thing_descriptions/')
+      this.setConnected()
+    },
+    getLocalStorageObj(keyName) {
+      if (localStorage.getItem(keyName)) {
+        try {
+          return JSON.parse(localStorage.getItem(keyName))
+        } catch (e) {
+          localStorage.removeItem(keyName)
+          return null
+        }
+      }
+    },
+    setLocalStorageObj(keyName, obj) {
+      const parsed = JSON.stringify(obj)
+      localStorage.setItem(keyName, parsed)
     },
   },
 })

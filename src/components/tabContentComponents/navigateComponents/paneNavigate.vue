@@ -28,7 +28,7 @@
                   :submit-data="state.setPosition"
                   :submit-label="'Move'"
                   :can-terminate="true"
-                  :poll-interval="0.05"
+                  :poll-interval="0.5"
                   @taskStarted="state.moveLock = true"
                   @finished="(updatePosition(), (state.moveLock = false))"
                   @error="modalError"
@@ -99,6 +99,7 @@
 <script setup>
 import { reactive, computed, onMounted, onBeforeUnmount, useTemplateRef } from 'vue'
 import { useWotStore } from '@/stores/wotStore'
+import emitter from '@/stores/eventBus'
 import axios from 'axios'
 import ActionButton from '../../labThingsComponents/actionButton.vue'
 
@@ -136,24 +137,24 @@ const moveInImageCoordinatesUri = computed(() => {
 
 onMounted(async () => {
   // Reload saved settings
-  state.stepSize = 1 // this.getLocalStorageObj('navigation_stepSize') || this.stepSize
-  state.invert = false //this.getLocalStorageObj('navigation_invert') || this.invert
+  state.stepSize = wotStore.getLocalStorageObj('navigation_stepSize') || state.stepSize
+  state.invert = wotStore.getLocalStorageObj('navigation_invert') || state.invert
   // A global signal listener to perform a move action
-  // this.$root.$on('globalMoveEvent', self.move)
-  // // A global signal listener to perform a move action in pixels
-  // this.$root.$on('globalMoveInImageCoordinatesEvent', (x, y, absolute) => {
-  //   this.moveInImageCoordinatesRequest(x, y, absolute)
-  // })
-  // // A global signal listener to perform a move in multiples of a step size
-  // this.$root.$on('globalMoveStepEvent', (x_steps, y_steps, z_steps) => {
-  //   this.$root.$emit(
-  //     'globalMoveEvent',
-  //     x_steps * this.stepSize.x * (this.invert.x ? -1 : 1),
-  //     y_steps * this.stepSize.y * (this.invert.y ? -1 : 1),
-  //     z_steps * this.stepSize.z * (this.invert.z ? -1 : 1),
-  //     false,
-  //   )
-  // })
+  emitter.on('globalMoveEvent', move)
+  // A global signal listener to perform a move action in pixels
+  emitter.on('globalMoveInImageCoordinatesEvent', (x, y, absolute) => {
+    moveInImageCoordinatesRequest(x, y, absolute)
+  })
+  // A global signal listener to perform a move in multiples of a step size
+  emitter.on('globalMoveStepEvent', (x_steps, y_steps, z_steps) => {
+    emitter.emit(
+      'globalMoveEvent',
+      x_steps * this.stepSize.x * (this.invert.x ? -1 : 1),
+      y_steps * this.stepSize.y * (this.invert.y ? -1 : 1),
+      z_steps * this.stepSize.z * (this.invert.z ? -1 : 1),
+      false,
+    )
+  })
   // Update the current position in text boxes
   await updatePosition()
 })
@@ -220,8 +221,7 @@ function moveInImageCoordinatesRequest(x, y) {
 }
 
 async function updatePosition() {
-  // state.setPosition = await this.readThingProperty('stage', 'position')
-  state.setPosition = { x: 0, y: 0, z: 0 }
+  state.setPosition = await wotStore.readThingProperty('stage', 'position')
 }
 
 async function handleCaptureResponse(response) {

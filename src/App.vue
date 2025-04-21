@@ -6,15 +6,7 @@ import loadingContent from './components/loadingContent.vue'
 
 const wotStore = useWotStore()
 
-onMounted(() => {
-  checkConnection()
-})
-
-async function checkConnection() {
-  wotStore.wot.fetchThingDescriptions('http://localhost:5000/thing_descriptions/').then((tds) => {
-    wotStore.setConnected()
-  })
-}
+onMounted(() => {})
 </script>
 
 <template>

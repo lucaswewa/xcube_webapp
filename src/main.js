@@ -22,12 +22,12 @@ UIkit.mixin(
 
 const app = createApp(App)
 
+app.use(createPinia())
+
 // Use Friendly Iframe module
 app.use(VueFriendlyIframe)
 
 // Use visibility observer
 app.use(VueObserveVisibility)
-
-app.use(createPinia())
 
 app.mount('#app')
