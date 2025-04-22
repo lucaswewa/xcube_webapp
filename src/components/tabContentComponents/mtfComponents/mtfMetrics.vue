@@ -2,51 +2,11 @@
   <div id="cameraSettings">
     <div class="uk-grid uk-grid-divider uk-child-width-expand" uk-grid>
       <div class="uk-width-large">
-        <h3>PSF</h3>
-        <pieChart />
+        <h4>PSF</h4>
+        <pieChart :yMax="4096"/>
 
-        <h3>MTF</h3>
-        <pieChart />
-
-        <h3>Manual camera settings</h3>
-        <form @submit.prevent="applySettingsRequest">
-          <div class="uk-margin-small-bottom">
-            <ul uk-accordion="multiple: true">
-              <li class="uk-open">
-                <a class="uk-accordion-title" href="#">Camera Settings</a>
-                <div class="uk-accordion-content"></div>
-              </li>
-              <li class="uk-open">
-                <a class="uk-accordion-title" href="#">Image Quality</a>
-                <div class="uk-accordion-content"></div>
-              </li>
-
-              <li>
-                <a class="uk-accordion-title" href="#">Advanced</a>
-                <div class="uk-accordion-content">
-                  <div v-if="state.picamera.framerate !== undefined" class="uk-margin-top">
-                    <label class="uk-form-label" for="form-stacked-text">Camera framerate</label>
-                    <select v-model="state.picamera.framerate" class="uk-select uk-form-small">
-                      <option
-                        v-for="option in state.framerateOptions"
-                        :key="option.value"
-                        :value="option.value"
-                      >
-                        {{ option.text }}
-                      </option>
-                    </select>
-                    <p class="uk-margin-remove">
-                      This option sets the framerate of the Pi Camera video encoder. The actual
-                      stream framerate is determined by network speed, and is limited by the encoder
-                      framerate.<br />
-                      <b>Lowering framerate may impact fast-autofocus accuracy.</b>
-                    </p>
-                  </div>
-                </div>
-              </li>
-            </ul>
-          </div>
-        </form>
+        <h4>MTF</h4>
+        <pieChart :yMax="100" />
       </div>
 
       <div id="mini-stream">
@@ -57,46 +17,9 @@
 </template>
 
 <script setup>
-import cameraCalibrationSettings from '../settingsComponents/cameraSettingsComponents/cameraCalibrationSettings.vue'
 import miniStreamDisplay from '../../genericComponents/miniStreamDisplay.vue'
 import pieChart from './piechart.vue'
-import { useWotStore } from '@/stores/wotStore'
-import { reactive, computed } from 'vue'
 
-const wotStore = useWotStore()
-
-const state = reactive({
-  picamera: {
-    shutter_speed: undefined,
-    analog_gain: undefined,
-    digital_gain: undefined,
-    framerate: undefined,
-    awb_gains: undefined,
-  },
-  mjpeg_bitrate: undefined,
-  stream_resolution: undefined,
-  jpeg_quality: undefined,
-  bitrateOptions: [
-    { text: 'Maximum (unlimited)', value: -1 },
-    { text: 'High (25Mbps)', value: 25000000 },
-    { text: 'Normal (17Mbps)', value: 17000000 },
-    { text: 'Low (5Mbps)', value: 5000000 },
-    { text: 'Very low (2.5Mbps)', value: 2500000 },
-  ],
-  resolutionOptions: [
-    { text: 'Higher (832, 624)', value: [832, 624] },
-    { text: 'Normal (640, 480)', value: [640, 480] },
-  ],
-  framerateOptions: [
-    { text: 'Normal (30fps)', value: 30 },
-    { text: 'Low (15fps)', value: 15 },
-    { text: 'Very low (10fps)', value: 10 },
-  ],
-})
-
-const cameraUri = computed(() => {
-  return wotStore.baseUri + `/camera/`
-})
 </script>
 
 <style lang="less">

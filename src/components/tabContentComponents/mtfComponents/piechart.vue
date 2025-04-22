@@ -13,7 +13,15 @@ import {
   GridComponent,
 } from 'echarts/components'
 import { VueEcharts } from 'vue3-echarts'
-import { ref, provide } from 'vue'
+import { ref } from 'vue'
+
+const props = defineProps({
+  yMax: {
+    type: Number,
+    required: true,
+    default: 100
+  },
+})
 
 use([
   CanvasRenderer,
@@ -25,13 +33,15 @@ use([
   LineChart,
 ])
 
+// provide(THEME_KEY, 'dark')
+
 function func(x) {
   x /= 10
-  return Math.sin(x) * Math.cos(x * 2 + 1) * Math.sin(x * 3 + 2) * 50
+  return (Math.sin(x) * Math.cos(x * 2 + 1) * Math.sin(x * 3 + 2) * props.yMax) + props.yMax/4
 }
 function generateData() {
   let data = []
-  for (let i = -200; i <= 200; i += 0.1) {
+  for (let i = 0; i <= 30; i += 0.1) {
     data.push([i, func(i)])
   }
   return data
@@ -56,8 +66,8 @@ const option = ref({
   },
   yAxis: {
     name: 'y',
-    min: -100,
-    max: 100,
+    min: 0,
+    max: props.yMax,
     minorTick: {
       show: true,
     },
@@ -79,8 +89,8 @@ const option = ref({
       type: 'inside',
       filterMode: 'none',
       yAxisIndex: [0],
-      startValue: -20,
-      endValue: 20,
+      startValue: 0,
+      endValue: props.yMax,
     },
   ],
   series: [
@@ -96,7 +106,7 @@ const option = ref({
 
 <style scoped>
 .chart {
-  height: 50vh;
-  width: 55vh;
+  height: 45vh;
+  width: 50vh;
 }
 </style>
