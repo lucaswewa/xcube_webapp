@@ -5,7 +5,7 @@ import UIkit from 'uikit'
 
 import App from './App.vue'
 import VueFriendlyIframe from 'vue-friendly-iframe'
-import VueObserveVisibility from 'vue-observe-visibility'
+import VueObserveVisibility from 'vue3-observe-visibility'
 
 // Import MD icons
 import 'material-symbols/outlined.css'

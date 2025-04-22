@@ -6,7 +6,7 @@
     class="stream-display uk-width-1-1 uk-height-1-1 scrollTarget"
   >
     <img
-      v-if="isVisible"
+      v-if="state.isVisible"
       ref="click-frame"
       class="uk-align-center uk-margin-remove-bottom"
       :src="streamImgUri"
@@ -15,29 +15,21 @@
   </div>
 </template>
 
-<script>
-// Export main app
-export default {
-  name: "MiniStreamDisplay",
+<script setup>
+import { reactive, computed } from 'vue'
 
-  data: function() {
-    return {
-      isVisible: true
-    };
-  },
+const state = reactive({
+  isVisible: false
+})
 
-  computed: {
-    streamImgUri: function() {
-      // return `${this.$store.getters.baseUri}/camera/mjpeg_stream`;
-      return 'http://localhost:5000/camera/mjpeg_stream'
-    }
-  },
-  methods: {
-    visibilityChanged(isVisible) {
-      this.isVisible = isVisible;
-    }
-  }
-};
+const streamImgUri = computed(() => {
+  // return `${this.$store.getters.baseUri}/camera/mjpeg_stream`;
+  return 'http://localhost:5000/camera/mjpeg_stream'
+})
+
+function visibilityChanged(isVisible) {
+  state.isVisible = isVisible;
+}
 </script>
 
 <style scoped lang="less">

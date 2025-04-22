@@ -44,7 +44,7 @@ const wotStore = useWotStore()
 const streamDisplay = useTemplateRef('streamDisplay')
 
 const state = reactive({
-  isVisible: true,
+  isVisible: false,
   displaySize: [0, 0],
   displayPosition: [0, 0],
   resizeTimeoutId: setTimeout(null, 500),
