@@ -133,6 +133,6 @@
 </template>
 
 <script setup>
-import ActionButton from "../../labThingsComponents/actionButton.vue";
-import PropertyControl from "../../labThingsComponents/propertyControl.vue";
+import ActionButton from '../../labThingsComponents/actionButton.vue'
+import PropertyControl from '../../labThingsComponents/propertyControl.vue'
 </script>

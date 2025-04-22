@@ -90,128 +90,116 @@ const wotStore = useWotStore()
 const props = defineProps({
   label: {
     type: String,
-    default: ""
+    default: '',
   },
   propertyName: {
     type: String,
-    required: true
+    required: true,
   },
   thingName: {
     type: String,
-    required: true
+    required: true,
   },
   readBackDelay: {
     type: Number,
     default: undefined,
-    required: false
-  }
+    required: false,
+  },
 })
 
 const state = reactive({
   value: undefined,
   valueOnEnter: undefined,
-  focused: false
+  focused: false,
 })
 
 const valueLength = computed(() => {
-  if (dataType == "number_array") {
+  if (dataType.value == 'number_array') {
     if (state.value == undefined) {
-      return 0;
+      return 0
     }
-    return state.value.length;
+    return state.value.length
   } else {
-    return 1;
+    return 1
   }
 })
 const readBack = computed(() => {
-    return props.readBackDelay !== undefined;
-  })
+  return props.readBackDelay !== undefined
+})
 
 const propertyDescription = computed(() => {
   try {
-    return wotStore.thingDescription(props.thingName).properties[
-      props.propertyName
-    ];
+    return wotStore.thingDescription(props.thingName).properties[props.propertyName]
   } catch (error) {
-    return undefined;
+    return undefined
   }
 })
 
 const dataType = computed(() => {
-  let prop = propertyDescription;
-  if (prop == undefined) {
-    return "undefined";
+  let prop = propertyDescription
+  if (prop.value == undefined) {
+    return 'undefined'
   }
-  const num_types = ["integer", "float", "number"];
-  if (num_types.includes(prop.type)) {
-    return "number";
+  const num_types = ['integer', 'float', 'number']
+  if (num_types.includes(prop.value.type)) {
+    return 'number'
   }
-  if (prop.type == "array") {
-    if (num_types.includes(prop.items.type)) {
-      return "number_array";
+  if (prop.value.type == 'array') {
+    if (num_types.includes(prop.value.items.type)) {
+      return 'number_array'
     }
-    if (Array.isArray(prop.items)) {
-      if (prop.items.every(t => num_types.includes(t.type))) {
-        return "number_array";
+    if (Array.isArray(prop.value.items)) {
+      if (prop.value.items.every((t) => num_types.includes(t.type))) {
+        return 'number_array'
       }
     }
   }
-  if (prop.type == "boolean") {
-    return "boolean";
+  if (prop.value.type == 'boolean') {
+    return 'boolean'
   }
-  if (prop.type == "object") {
-    let numeric = true;
-    for (let key in prop.properties) {
-      if (!num_types.includes(prop.properties[key].type)) {
-        numeric = false;
-        break;
+  if (prop.value.type == 'object') {
+    let numeric = true
+    for (let key in prop.value.properties) {
+      if (!num_types.includes(prop.value.properties[key].type)) {
+        numeric = false
+        break
       }
     }
     if (numeric) {
-      return "number_object";
+      return 'number_object'
     }
   }
-  return "other";
+  return 'other'
 })
 
-watch(
-  propertyDescription,
-  () => {
-    // Ensure we read the property once the URL is known
-    readProperty();
-  }
-)
+watch(propertyDescription, () => {
+  // Ensure we read the property once the URL is known
+  readProperty()
+})
 
 onMounted(() => {
   // Read the property when we're mounted - usually this won't
   // work because the URL isn't set yet. However, it's helpful if
   // the app is reloaded (e.g. from a dev server).
   if (state.value == undefined) {
-    readProperty();
+    readProperty()
   }
 })
 
 async function readProperty() {
-  let data = await wotStore.readThingProperty(
-    props.thingName,
-    props.propertyName
-  );
-  state.value = data;
-  return data;
+  let data = await wotStore.readThingProperty(props.thingName, props.propertyName)
+  state.value = data
+  return data
 }
 
 async function writeProperty() {
   try {
-    let requestedValue = state.value;
-    console.log("writing", requestedValue);
-    await wotStore.writeThingProperty(
-      props.thingName,
-      props.propertyName,
-      requestedValue
-    );
-    if (readBack) {
-      await new Promise(r => setTimeout(r, props.readBackDelay));
-      let newVal = await readProperty();
+    let requestedValue = state.value
+    console.log('writing', requestedValue)
+    await wotStore.writeThingProperty(props.thingName, props.propertyName, requestedValue)
+    if (readBack.value) {
+      await new Promise((r) => setTimeout(r, props.readBackDelay))
+      let newVal = await readProperty()
       if (newVal == requestedValue) {
         // await this.modalNotify(`Set ${props.label} to ${newVal}.`);
       } else {
@@ -229,25 +217,25 @@ async function writeProperty() {
 
 function checkboxUpdated() {
   if (state.value != useTemplateRef('checkbox').checked) {
-    state.value = useTemplateRef('checkbox').checked;
-    writeProperty();
+    state.value = useTemplateRef('checkbox').checked
+    writeProperty()
   }
 }
 
 function focusIn(event) {
-  state.valueOnEnter = event.target.value;
+  state.valueOnEnter = event.target.value
 }
 
 function focusOut(event) {
   if (state.valueOnEnter != event.target.value) {
-    writeProperty(event.target.value);
+    writeProperty(event.target.value)
   }
 }
 
 function keyDown(event) {
   // Pressing enter should set the property, whether or not we think it's changed.
   if (event.keyCode == 13) {
-    writeProperty();
+    writeProperty()
   }
 }
 </script>
