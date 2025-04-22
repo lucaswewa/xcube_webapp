@@ -132,16 +132,7 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import ActionButton from "../../labThingsComponents/actionButton.vue";
 import PropertyControl from "../../labThingsComponents/propertyControl.vue";
-
-export default {
-  name: "PaneMTF",
-
-  components: {
-    ActionButton,
-    PropertyControl
-  }
-}
 </script>

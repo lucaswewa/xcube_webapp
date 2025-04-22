@@ -28,18 +28,18 @@
                 <div class="uk-accordion-content">
 
                   <div
-                    v-if="picamera.framerate !== undefined"
+                    v-if="state.picamera.framerate !== undefined"
                     class="uk-margin-top"
                   >
                     <label class="uk-form-label" for="form-stacked-text"
                       >Camera framerate</label
                     >
                     <select
-                      v-model="picamera.framerate"
+                      v-model="state.picamera.framerate"
                       class="uk-select uk-form-small"
                     >
                       <option
-                        v-for="option in framerateOptions"
+                        v-for="option in state.framerateOptions"
                         :key="option.value"
                         :value="option.value"
                       >
@@ -67,56 +67,44 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import cameraCalibrationSettings from "../settingsComponents/cameraSettingsComponents/cameraCalibrationSettings.vue";
 import miniStreamDisplay from "../../genericComponents/miniStreamDisplay.vue";
 
-// Export main app
-export default {
-  name: "CameraSettings",
+import { reactive, computed } from 'vue'
 
-  components: {
-    cameraCalibrationSettings,
-    miniStreamDisplay,
+const state = reactive({
+  picamera: {
+    shutter_speed: undefined,
+    analog_gain: undefined,
+    digital_gain: undefined,
+    framerate: undefined,
+    awb_gains: undefined
   },
+  mjpeg_bitrate: undefined,
+  stream_resolution: undefined,
+  jpeg_quality: undefined,
+  bitrateOptions: [
+    { text: "Maximum (unlimited)", value: -1 },
+    { text: "High (25Mbps)", value: 25000000 },
+    { text: "Normal (17Mbps)", value: 17000000 },
+    { text: "Low (5Mbps)", value: 5000000 },
+    { text: "Very low (2.5Mbps)", value: 2500000 }
+  ],
+  resolutionOptions: [
+    { text: "Higher (832, 624)", value: [832, 624] },
+    { text: "Normal (640, 480)", value: [640, 480] }
+  ],
+  framerateOptions: [
+    { text: "Normal (30fps)", value: 30 },
+    { text: "Low (15fps)", value: 15 },
+    { text: "Very low (10fps)", value: 10 }
+  ]
+})
 
-  data: function() {
-    return {
-      picamera: {
-        shutter_speed: undefined,
-        analog_gain: undefined,
-        digital_gain: undefined,
-        framerate: undefined,
-        awb_gains: undefined
-      },
-      mjpeg_bitrate: undefined,
-      stream_resolution: undefined,
-      jpeg_quality: undefined,
-      bitrateOptions: [
-        { text: "Maximum (unlimited)", value: -1 },
-        { text: "High (25Mbps)", value: 25000000 },
-        { text: "Normal (17Mbps)", value: 17000000 },
-        { text: "Low (5Mbps)", value: 5000000 },
-        { text: "Very low (2.5Mbps)", value: 2500000 }
-      ],
-      resolutionOptions: [
-        { text: "Higher (832, 624)", value: [832, 624] },
-        { text: "Normal (640, 480)", value: [640, 480] }
-      ],
-      framerateOptions: [
-        { text: "Normal (30fps)", value: 30 },
-        { text: "Low (15fps)", value: 15 },
-        { text: "Very low (10fps)", value: 10 }
-      ]
-    };
-  },
-
-  computed: {
-    cameraUri: function() {
-      return `http://localhost:5000/camera/`;
-    }
-  }
-};
+const cameraUri = computed(() => {
+  return `http://localhost:5000/camera/`;
+})
 </script>
 
 <style lang="less">

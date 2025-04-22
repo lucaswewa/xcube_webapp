@@ -5,37 +5,34 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: "ActionProgressBar",
+<script setup>
+import { computed } from 'vue'
 
-  props: {
-    progress: {
-      type: Number,
-      required: false,
-      default: null
-    },
-    taskStatus: {
-      type: String,
-      required: true
-    }
+const props = defineProps({
+  progress: {
+    type: Number,
+    required: false,
+    default: null
   },
-
-  computed: {
-    barWidthFromProgress: function() {
-      var progress = this.progress <= 100 ? this.progress : 100;
-      var styleString = `width: ${progress}%`;
-      return styleString;
-    },
-    indeterminateProgressBar: function() {
-      if (this.taskStatus == "pending") return true;
-      if ((this.taskStatus == "running") & !this.progress) {
-        return true;
-      }
-      return false;
-    }
+  taskStatus: {
+    type: String,
+    required: true
   }
-};
+})
+
+const barWidthFromProgress = computed(() => {
+  var progress = props.progress <= 100 ? props.progress : 100;
+  var styleString = `width: ${progress}%`;
+  return styleString;
+})
+
+const indeterminateProgressBar = computed(() => {
+  if (props.taskStatus == "pending") return true;
+  if ((props.taskStatus == "running") & !props.progress) {
+    return true;
+  }
+  return false;
+})
 </script>
 
 <style lang="less" scoped>

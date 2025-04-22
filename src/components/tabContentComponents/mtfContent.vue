@@ -10,16 +10,7 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import paneMTF from "./mtfComponents/paneMTF.vue"
-import mtfMetrics from "./mtfComponents/mtfMetrics.vue";
-
-export default {
-  name: "MTFContent",
-
-  components: {
-    paneMTF,
-    mtfMetrics
-  }
-};
+import mtfMetrics from "./mtfComponents/mtfMetrics.vue"
 </script>
