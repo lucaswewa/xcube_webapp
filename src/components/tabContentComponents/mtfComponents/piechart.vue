@@ -5,49 +5,92 @@
 <script setup>
 import { use } from 'echarts/core'
 import { CanvasRenderer } from 'echarts/renderers'
-import { PieChart } from 'echarts/charts'
-import { TitleComponent, TooltipComponent, LegendComponent } from 'echarts/components'
+import { PieChart, LineChart } from 'echarts/charts'
+import {
+  TitleComponent,
+  TooltipComponent,
+  LegendComponent,
+  GridComponent,
+} from 'echarts/components'
 import VChart, { THEME_KEY } from 'vue-echarts'
 import { ref, provide } from 'vue'
 
-use([CanvasRenderer, PieChart, TitleComponent, TooltipComponent, LegendComponent])
+use([
+  CanvasRenderer,
+  PieChart,
+  TitleComponent,
+  TooltipComponent,
+  LegendComponent,
+  GridComponent,
+  LineChart,
+])
 
 provide(THEME_KEY, 'dark')
 
+function func(x) {
+  x /= 10
+  return Math.sin(x) * Math.cos(x * 2 + 1) * Math.sin(x * 3 + 2) * 50
+}
+function generateData() {
+  let data = []
+  for (let i = -200; i <= 200; i += 0.1) {
+    data.push([i, func(i)])
+  }
+  return data
+}
+
 const option = ref({
-  title: {
-    text: 'Traffic Sources',
-    left: 'center',
+  animation: false,
+  grid: {
+    top: 40,
+    left: 50,
+    right: 40,
+    bottom: 50,
   },
-  tooltip: {
-    trigger: 'item',
-    formatter: '{a} <br/>{b} : {c} ({d}%)',
+  xAxis: {
+    name: 'x',
+    minorTick: {
+      show: true,
+    },
+    minorSplitLine: {
+      show: true,
+    },
   },
-  legend: {
-    orient: 'vertical',
-    left: 'left',
-    data: ['Direct', 'Email', 'Ad Networks', 'Video Ads', 'Search Engines'],
+  yAxis: {
+    name: 'y',
+    min: -100,
+    max: 100,
+    minorTick: {
+      show: true,
+    },
+    minorSplitLine: {
+      show: true,
+    },
   },
+  dataZoom: [
+    {
+      show: true,
+      type: 'inside',
+      filterMode: 'none',
+      xAxisIndex: [0],
+      startValue: -20,
+      endValue: 20,
+    },
+    {
+      show: true,
+      type: 'inside',
+      filterMode: 'none',
+      yAxisIndex: [0],
+      startValue: -20,
+      endValue: 20,
+    },
+  ],
   series: [
     {
-      name: 'Traffic Sources',
-      type: 'pie',
-      radius: '55%',
-      center: ['50%', '60%'],
-      data: [
-        { value: 335, name: 'Direct' },
-        { value: 310, name: 'Email' },
-        { value: 234, name: 'Ad Networks' },
-        { value: 135, name: 'Video Ads' },
-        { value: 1548, name: 'Search Engines' },
-      ],
-      emphasis: {
-        itemStyle: {
-          shadowBlur: 10,
-          shadowOffsetX: 0,
-          shadowColor: 'rgba(0, 0, 0, 0.5)',
-        },
-      },
+      type: 'line',
+      showSymbol: false,
+      clip: true,
+      data: generateData(),
     },
   ],
 })
@@ -56,5 +99,6 @@ const option = ref({
 <style scoped>
 .chart {
   height: 50vh;
+  width: 55vh;
 }
 </style>
