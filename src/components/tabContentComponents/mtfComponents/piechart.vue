@@ -1,5 +1,5 @@
 <template>
-  <v-chart class="chart" :option="option" autoresize />
+  <vue-echarts class="chart" :option="option" autoresize />
 </template>
 
 <script setup>
@@ -12,7 +12,7 @@ import {
   LegendComponent,
   GridComponent,
 } from 'echarts/components'
-import VChart, { THEME_KEY } from 'vue-echarts'
+import { VueEcharts } from 'vue3-echarts'
 import { ref, provide } from 'vue'
 
 use([
@@ -24,8 +24,6 @@ use([
   GridComponent,
   LineChart,
 ])
-
-provide(THEME_KEY, 'dark')
 
 function func(x) {
   x /= 10
