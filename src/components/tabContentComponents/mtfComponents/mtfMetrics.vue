@@ -13,7 +13,48 @@
         <div class="outsideWrapper">
           <div class="insideWrapper">
             <miniStreamDisplay class="coveredImage" />
-            <canvas ref="canvasRef" class="coveringCanvas" width="600" height="500"></canvas>
+            <!-- <canvas ref="canvasRef" class="coveringCanvas" width="600" height="500"></canvas> -->
+            <v-stage :config="stageSize" ref="canvasRef" class="coveringCanvas">
+              <v-layer>
+                <v-text
+                  :config="{
+                    text: 'Some text on canvas',
+                    fontSize: 15,
+                  }"
+                />
+                <v-rect
+                  :config="{
+                    x: 20,
+                    y: 50,
+                    width: 100,
+                    height: 100,
+                    fill: 'red',
+                    shadowBlur: 10,
+                  }"
+                />
+                <v-circle
+                  :config="{
+                    x: 200,
+                    y: 100,
+                    radius: 50,
+                    fill: 'green',
+                  }"
+                />
+                <v-line
+                  :config="{
+                    x: 20,
+                    y: 200,
+                    points: [0, 0, 100, 0, 100, 100],
+                    tension: 0.5,
+                    closed: true,
+                    stroke: 'black',
+                    fillLinearGradientStartPoint: { x: -50, y: -50 },
+                    fillLinearGradientEndPoint: { x: 50, y: 50 },
+                    fillLinearGradientColorStops: [0, 'red', 1, 'yellow'],
+                  }"
+                />
+              </v-layer>
+            </v-stage>
           </div>
         </div>
       </div>
@@ -26,6 +67,11 @@ import miniStreamDisplay from '../../genericComponents/miniStreamDisplay.vue'
 import pieChart from './piechart.vue'
 import { ref, onMounted } from 'vue'
 
+const stageSize = {
+  width: window.innerWidth,
+  height: window.innerHeight,
+}
+
 const canvasRef = ref(null)
 let ctx = null
 
@@ -34,12 +80,11 @@ let startY = 0
 let isDrawing = false
 
 onMounted(() => {
-  const canvas = canvasRef.value
-  ctx = canvas.getContext('2d')
-
-  canvas.addEventListener('mousedown', handleMouseDown)
-  canvas.addEventListener('mousemove', handleMouseMove)
-  canvas.addEventListener('mouseup', handleMouseUp)
+  // const canvas = canvasRef.value
+  // ctx = canvas.getContext('2d')
+  // canvas.addEventListener('mousedown', handleMouseDown)
+  // canvas.addEventListener('mousemove', handleMouseMove)
+  // canvas.addEventListener('mouseup', handleMouseUp)
 })
 
 function handleMouseDown(event) {

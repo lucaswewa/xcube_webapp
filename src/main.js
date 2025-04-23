@@ -6,6 +6,7 @@ import UIkit from 'uikit'
 import App from './App.vue'
 import VueFriendlyIframe from 'vue-friendly-iframe'
 import VueObserveVisibility from 'vue3-observe-visibility'
+import VueKonva from 'vue-konva'
 
 // Import MD icons
 import 'material-symbols/outlined.css'
@@ -29,5 +30,7 @@ app.use(VueFriendlyIframe)
 
 // Use visibility observer
 app.use(VueObserveVisibility)
+
+app.use(VueKonva)
 
 app.mount('#app')
