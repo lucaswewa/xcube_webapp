@@ -46,21 +46,27 @@ function handleMouseDown(event) {
   startX = event.offsetX
   startY = event.offsetY
   isDrawing = true
+  console.log(startX + ', ' + startY)
 }
 
 function handleMouseMove(event) {
   if (!isDrawing) return
-  const width = event.offsetX - startX
-  const height = event.offsetY - startY
+  // const width = event.offsetX - startX
+  // const height = event.offsetY - startY
+  const width = event.screenX - startX
+  const height = event.screenY - startY
   ctx.clearRect(0, 0, canvasRef.value.width, canvasRef.value.height)
   ctx.strokeRect(startX, startY, width, height)
 }
 
 function handleMouseUp(event) {
+  console.log(event)
   if (!isDrawing) return
   isDrawing = false
-  const width = event.offsetX - startX
-  const height = event.offsetY - startY
+  // const width = event.offsetX - startX
+  // const height = event.offsetY - startY
+  const width = event.screenX - startX
+  const height = event.screenY - startY
   ctx.clearRect(0, 0, canvasRef.value.width, canvasRef.value.height)
   ctx.strokeRect(startX, startY, width, height)
 }
@@ -69,15 +75,15 @@ function handleMouseUp(event) {
 <style lang="less">
 #mini-stream {
   min-width: 300px;
-  max-width: 600px;
+  max-width: 800px;
   text-align: center;
   margin-left: auto;
   margin-right: auto;
   margin-top: 50px;
 }
 .outsideWrapper {
-  width: 256px;
-  height: 256px;
+  width: 800px;
+  height: 600px;
   margin: 20px 60px;
   border: 1px solid blue;
 }
