@@ -37,55 +37,6 @@
           </div>
         </li>
         <li class="uk-open">
-          <a class="uk-accordion-title" href="#">LEDs</a>
-          <div class="uk-accordion-content">
-            <p>
-              <PropertyControl
-                label="Red LED: (550 nm)"
-                property-name="red_on"
-                thing-name="led"
-                :read-back-delay="500"
-              />
-              <PropertyControl
-                label="Current: (10~1000 mA)"
-                property-name="red_current"
-                thing-name="led"
-                :read-back-delay="1000"
-              />
-            </p>
-
-            <p>
-              <PropertyControl
-                label="Green LED: (550 nm)"
-                property-name="green_on"
-                thing-name="led"
-                :read-back-delay="500"
-              />
-              <PropertyControl
-                label="Current: (10~1000 mA)"
-                property-name="green_current"
-                thing-name="led"
-                :read-back-delay="1000"
-              />
-            </p>
-
-            <p>
-              <PropertyControl
-                label="Blue LED: (550 nm)"
-                property-name="blue_on"
-                thing-name="led"
-                :read-back-delay="500"
-              />
-              <PropertyControl
-                label="Current: (10~1000 mA)"
-                property-name="blue_current"
-                thing-name="led"
-                :read-back-delay="1000"
-              />
-            </p>
-          </div>
-        </li>
-        <li>
           <a class="uk-accordion-title" href="#">ROI</a>
           <div class="uk-accordion-content">
             <PropertyControl
