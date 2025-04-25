@@ -16,11 +16,16 @@
             <miniStreamDisplay class="coveredImage" @resized="onStreamResized"/>
             <div ref="containerRef" style="width:100%;height:100%;">
               <v-stage :config="{
-                  width: stageWidth,
-                  height: stageHeight,
-                  scaleX: scale,
-                  scaleY: scale
-                }" class="coveringCanvas">
+                    width: stageWidth,
+                    height: stageHeight,
+                    scaleX: scale,
+                    scaleY: scale
+                  }"
+                  class="coveringCanvas"
+                  @mousedown="handleMouseDown"
+                  @mousemove="handleMouseMove"
+                  @mouseup="handleMouseUp"
+                >
                 <v-layer>
                   <v-rect
                     :config="{
@@ -54,6 +59,20 @@
                       strokeWidth: 1
                     }"
                   />
+                  <v-line
+                    v-for="(line, i) in lines"
+                    :key="i"
+                    :config="{
+                      points: line.points,
+                      stroke: '#df4b26',
+                      strokeWidth: 5,
+                      tension: 0.5,
+                      lineCap: 'round',
+                      lineJoin: 'round',
+                      globalCompositeOperation:
+                        line.tool === 'eraser' ? 'destination-out' : 'source-over'
+                    }"
+                  />
                 </v-layer>
               </v-stage>
             </div>
@@ -70,6 +89,10 @@
 import miniStreamDisplay from '../../genericComponents/miniStreamDisplay.vue'
 import pieChart from './piechart.vue'
 import { ref, onMounted, computed, useTemplateRef } from 'vue'
+
+const tool = ref('brush')
+const lines = ref([]);
+const isDrawing = ref(false);
 
 const sceneWidth=4000
 const sceneHeight=3000
@@ -94,6 +117,28 @@ onMounted(() => {
 function onStreamResized(evt) {
   updateSize()
 }
+
+const handleMouseDown = (e) => {
+  isDrawing.value = true;
+  const pos = e.target.getStage().getPointerPosition();
+  lines.value.push({ tool: tool.value, points: [pos.x/scale.value, pos.y/scale.value] });
+};
+
+const handleMouseMove = (e) => {
+  if (!isDrawing.value) {
+    return;
+  }
+  const stage = e.target.getStage();
+  const point = stage.getPointerPosition();
+
+  let lastLine = lines.value[lines.value.length - 1];
+  lastLine.points = lastLine.points.concat([point.x/scale.value, point.y/scale.value]);
+  lines.value.splice(lines.value.length - 1, 1, { ...lastLine });
+};
+
+const handleMouseUp = () => {
+  isDrawing.value = false;
+};
 </script>
 
 <style lang="less">
