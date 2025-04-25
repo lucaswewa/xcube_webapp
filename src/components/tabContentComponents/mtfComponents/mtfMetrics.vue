@@ -29,8 +29,8 @@
                 <v-layer>
                   <v-rect
                     :config="{
-                      x: 20,
-                      y: 50,
+                      x: rect_x,
+                      y: rect_y,
                       width: 100,
                       height: 100,
                       fill: 'green',
@@ -90,6 +90,9 @@ import miniStreamDisplay from '../../genericComponents/miniStreamDisplay.vue'
 import pieChart from './piechart.vue'
 import { ref, onMounted, computed, useTemplateRef } from 'vue'
 
+const rect_x = ref(20)
+const rect_y = ref(50)
+
 const tool = ref('brush')
 const lines = ref([]);
 const isDrawing = ref(false);
@@ -121,7 +124,12 @@ function onStreamResized(evt) {
 const handleMouseDown = (e) => {
   isDrawing.value = true;
   const pos = e.target.getStage().getPointerPosition();
-  lines.value.push({ tool: tool.value, points: [pos.x/scale.value, pos.y/scale.value] });
+  const x = pos.x/scale.value
+  const y = pos.y/scale.value
+  lines.value.push({ tool: tool.value, points: [x, y] });
+  console.log('mouse down: ', x, y)
+  rect_x.value = x
+  rect_y.value = y
 };
 
 const handleMouseMove = (e) => {
@@ -136,8 +144,12 @@ const handleMouseMove = (e) => {
   lines.value.splice(lines.value.length - 1, 1, { ...lastLine });
 };
 
-const handleMouseUp = () => {
+const handleMouseUp = (e) => {
   isDrawing.value = false;
+  const pos = e.target.getStage().getPointerPosition()
+  const x = pos.x/scale.value
+  const y = pos.y/scale.value
+  console.log('mouse up: ', x, y)
 };
 </script>
 
