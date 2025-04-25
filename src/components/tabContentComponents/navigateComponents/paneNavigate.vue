@@ -31,7 +31,6 @@
                   :poll-interval="0.5"
                   @taskStarted="state.moveLock = true"
                   @finished="(updatePosition(), (state.moveLock = false))"
-                  @error="modalError"
                 />
               </p>
             </form>
@@ -53,7 +52,6 @@
                   :submit-on-event="'globalFastAutofocusEvent'"
                   @taskStarted="state.isAutofocusing = 1"
                   @finished="(updatePosition(), (state.isAutofocusing = 0))"
-                  @error="modalError"
                 />
               </div>
             </div>
@@ -70,7 +68,6 @@
                 :submit-label="'Low Resolution'"
                 :submit-on-event="'globalCaptureEvent'"
                 @response="handleCaptureResponse"
-                @error="modalError"
               />
             </div>
 
@@ -82,7 +79,6 @@
                 submit-label="Full Resolution"
                 :submit-on-event="'globalCaptureEvent'"
                 @response="handleCaptureResponse"
-                @error="modalError"
               />
             </div>
           </div>
@@ -197,9 +193,9 @@ function moveInImageCoordinatesRequest(x, y) {
     state.moveLock = true
 
     if (!moveInImageCoordinatesUri.value) {
-      this.modalError(
-        "Moving in image coordinates is not supported - you will need to upgrade your microscope's software.",
-      )
+      // this.modalError(
+      //   "Moving in image coordinates is not supported - you will need to upgrade your microscope's software.",
+      // )
     }
 
     // Send move request
@@ -212,7 +208,7 @@ function moveInImageCoordinatesRequest(x, y) {
         updatePosition() // Update the position in text boxes
       })
       .catch((error) => {
-        this.modalError(error) // Let mixin handle error
+        // this.modalError(error) // Let mixin handle error
       })
       .then(() => {
         state.moveLock = false // Release the move lock
@@ -228,7 +224,7 @@ async function handleCaptureResponse(response) {
   // Retrieve the captured image and save it
   let imageUri = response.output.href
   if (!imageUri) {
-    this.modalError('No image URI returned from capture task.')
+    // this.modalError('No image URI returned from capture task.')
     console.log(`Capture resulted in response ${response}`)
     return
   }

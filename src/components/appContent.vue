@@ -79,7 +79,7 @@ import { reactive, computed } from 'vue'
 const wotStore = useWotStore()
 
 const state = reactive({
-  currentTab: 'navigate',
+  currentTab: 'mtf',
   bottomTabs: [],
 })
 

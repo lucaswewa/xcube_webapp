@@ -3,60 +3,64 @@
     <div class="uk-grid uk-grid-divider uk-child-width-expand" uk-grid>
       <div class="uk-width-large">
         <h4>PSF</h4>
-        <pieChart :yMax="4096" />
+        <pieChart :yMax="4096" ref="ppp"/>
 
         <h4>MTF</h4>
         <pieChart :yMax="100" />
       </div>
 
       <div id="mini-stream">
+        <h4>Camera</h4>
         <div class="outsideWrapper">
-          <div class="insideWrapper">
-            <miniStreamDisplay class="coveredImage" />
-            <!-- <canvas ref="canvasRef" class="coveringCanvas" width="600" height="500"></canvas> -->
-            <v-stage :config="stageSize" ref="canvasRef" class="coveringCanvas">
-              <v-layer>
-                <v-text
-                  :config="{
-                    text: 'Some text on canvas',
-                    fontSize: 15,
-                  }"
-                />
-                <v-rect
-                  :config="{
-                    x: 20,
-                    y: 50,
-                    width: 100,
-                    height: 100,
-                    fill: 'red',
-                    shadowBlur: 10,
-                  }"
-                />
-                <v-circle
-                  :config="{
-                    x: 200,
-                    y: 100,
-                    radius: 50,
-                    fill: 'green',
-                  }"
-                />
-                <v-line
-                  :config="{
-                    x: 20,
-                    y: 200,
-                    points: [0, 0, 100, 0, 100, 100],
-                    tension: 0.5,
-                    closed: true,
-                    stroke: 'black',
-                    fillLinearGradientStartPoint: { x: -50, y: -50 },
-                    fillLinearGradientEndPoint: { x: 50, y: 50 },
-                    fillLinearGradientColorStops: [0, 'red', 1, 'yellow'],
-                  }"
-                />
-              </v-layer>
-            </v-stage>
+          <div class="insideWrapper" ref="display">
+            <miniStreamDisplay class="coveredImage" @resized="onStreamResized"/>
+            <div ref="containerRef" style="width:100%;height:100%;">
+              <v-stage :config="{
+                  width: stageWidth,
+                  height: stageHeight,
+                  scaleX: scale,
+                  scaleY: scale
+                }" class="coveringCanvas">
+                <v-layer>
+                  <v-rect
+                    :config="{
+                      x: 20,
+                      y: 50,
+                      width: 100,
+                      height: 100,
+                      fill: 'green',
+                      opacity: 0.1,
+                      stroke: 'green',
+                      strokeWidth: 0.2
+                    }"
+                  />
+                  <v-circle
+                    :config="{
+                      x: 200,
+                      y: 100,
+                      radius: 50,
+                      // fill: 'green',
+                      stroke: 'red'
+                    }"
+                  />
+                  <v-line
+                    :config="{
+                      x: 20,
+                      y: 200,
+                      points: [0, 0, 100, 0],
+                      // tension: 0.5,
+                      // closed: true,
+                      stroke: 'black',
+                      strokeWidth: 1
+                    }"
+                  />
+                </v-layer>
+              </v-stage>
+            </div>
           </div>
         </div>
+        <h4>ROI</h4>
+        <div>test</div>
       </div>
     </div>
   </div>
@@ -65,55 +69,30 @@
 <script setup>
 import miniStreamDisplay from '../../genericComponents/miniStreamDisplay.vue'
 import pieChart from './piechart.vue'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed, useTemplateRef } from 'vue'
 
-const stageSize = {
-  width: window.innerWidth,
-  height: window.innerHeight,
+const sceneWidth=4000
+const sceneHeight=3000
+
+const containerRef=useTemplateRef("containerRef")
+const scale=ref(1)
+
+const stageWidth = computed(() => sceneWidth*scale.value);
+const stageHeight = computed(() => sceneHeight*scale.value);
+
+const updateSize = () => {
+  if (!containerRef.value) return
+
+  const containerWidth = containerRef.value.offsetWidth
+  scale.value = containerWidth / sceneWidth
 }
-
-const canvasRef = ref(null)
-let ctx = null
-
-let startX = 0
-let startY = 0
-let isDrawing = false
 
 onMounted(() => {
-  // const canvas = canvasRef.value
-  // ctx = canvas.getContext('2d')
-  // canvas.addEventListener('mousedown', handleMouseDown)
-  // canvas.addEventListener('mousemove', handleMouseMove)
-  // canvas.addEventListener('mouseup', handleMouseUp)
+  updateSize()
 })
 
-function handleMouseDown(event) {
-  startX = event.offsetX
-  startY = event.offsetY
-  isDrawing = true
-  console.log(startX + ', ' + startY)
-}
-
-function handleMouseMove(event) {
-  if (!isDrawing) return
-  // const width = event.offsetX - startX
-  // const height = event.offsetY - startY
-  const width = event.screenX - startX
-  const height = event.screenY - startY
-  ctx.clearRect(0, 0, canvasRef.value.width, canvasRef.value.height)
-  ctx.strokeRect(startX, startY, width, height)
-}
-
-function handleMouseUp(event) {
-  console.log(event)
-  if (!isDrawing) return
-  isDrawing = false
-  // const width = event.offsetX - startX
-  // const height = event.offsetY - startY
-  const width = event.screenX - startX
-  const height = event.screenY - startY
-  ctx.clearRect(0, 0, canvasRef.value.width, canvasRef.value.height)
-  ctx.strokeRect(startX, startY, width, height)
+function onStreamResized(evt) {
+  updateSize()
 }
 </script>
 
@@ -121,15 +100,15 @@ function handleMouseUp(event) {
 #mini-stream {
   min-width: 300px;
   max-width: 800px;
+  max-height: 400px;
   text-align: center;
   margin-left: auto;
   margin-right: auto;
-  margin-top: 50px;
 }
 .outsideWrapper {
-  width: 800px;
-  height: 600px;
-  margin: 20px 60px;
+  width: 720;
+  height: 540;
+  margin: 10px 30px;
   border: 1px solid blue;
 }
 .insideWrapper {

@@ -7,7 +7,7 @@
   >
     <img
       v-if="state.isVisible"
-      ref="click-frame"
+      ref="clickFrame"
       class="uk-align-center uk-margin-remove-bottom"
       :src="streamImgUri"
       alt="Stream"
@@ -17,6 +17,22 @@
 
 <script setup>
 import { reactive, computed } from 'vue'
+import { useResizeObserver } from '@vueuse/core'
+import { useTemplateRef, defineEmits, onMounted } from 'vue'
+
+const emit = defineEmits(['resized'])
+
+const clickFrame = useTemplateRef('clickFrame')
+
+useResizeObserver(clickFrame, (entries) => {
+  const [entry] = entries
+  const { width, height } = entry.contentRect
+  console.log(`width: ${width}\nheight: ${height}`)
+  emit('resized', {
+    width: width,
+    height: height
+  })
+})
 
 const state = reactive({
   isVisible: false
@@ -27,6 +43,9 @@ const streamImgUri = computed(() => {
   return 'http://localhost:5000/camera/mjpeg_stream'
 })
 
+onMounted(() => {
+  // emit('resized', { width: })
+})
 function visibilityChanged(isVisible) {
   state.isVisible = isVisible;
 }
