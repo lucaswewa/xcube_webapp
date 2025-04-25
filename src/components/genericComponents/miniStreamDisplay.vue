@@ -18,7 +18,7 @@
 <script setup>
 import { reactive, computed } from 'vue'
 import { useResizeObserver } from '@vueuse/core'
-import { useTemplateRef, defineEmits, onMounted } from 'vue'
+import { useTemplateRef, onMounted } from 'vue'
 
 const emit = defineEmits(['resized'])
 
