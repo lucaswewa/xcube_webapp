@@ -33,30 +33,7 @@
                       y: rect_y,
                       width: 100,
                       height: 100,
-                      fill: 'green',
-                      opacity: 0.1,
-                      stroke: 'green',
-                      strokeWidth: 0.2
-                    }"
-                  />
-                  <v-circle
-                    :config="{
-                      x: 200,
-                      y: 100,
-                      radius: 50,
-                      // fill: 'green',
-                      stroke: 'red'
-                    }"
-                  />
-                  <v-line
-                    :config="{
-                      x: 20,
-                      y: 200,
-                      points: [0, 0, 100, 0],
-                      // tension: 0.5,
-                      // closed: true,
-                      stroke: 'black',
-                      strokeWidth: 1
+                      stroke: 'white',
                     }"
                   />
                   <v-line
@@ -97,8 +74,8 @@ const tool = ref('brush')
 const lines = ref([]);
 const isDrawing = ref(false);
 
-const sceneWidth=4000
-const sceneHeight=3000
+const sceneWidth=2464
+const sceneHeight=2064
 
 const containerRef=useTemplateRef("containerRef")
 const scale=ref(1)
@@ -128,8 +105,8 @@ const handleMouseDown = (e) => {
   const y = pos.y/scale.value
   lines.value.push({ tool: tool.value, points: [x, y] });
   console.log('mouse down: ', x, y)
-  rect_x.value = x
-  rect_y.value = y
+  rect_x.value = x - 50
+  rect_y.value = y - 50
 };
 
 const handleMouseMove = (e) => {
@@ -163,8 +140,8 @@ const handleMouseUp = (e) => {
   margin-right: auto;
 }
 .outsideWrapper {
-  width: 720;
-  height: 540;
+  width: 2464;
+  height: 2064;
   margin: 10px 30px;
   border: 1px solid blue;
 }
