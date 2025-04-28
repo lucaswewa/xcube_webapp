@@ -41,9 +41,10 @@
           <div class="uk-accordion-content">
             <PropertyControl
               label="ROI origin: (0.1-12.9 mm)"
-              property-name="velocity"
-              thing-name="tester"
+              property-name="roi_pos"
+              thing-name="camera"
               :read-back-delay="1000"
+              :autoRefresh="1000"
             />
             <PropertyControl
               label="ROI dimensions: (0-Inf mm)"
@@ -86,4 +87,20 @@
 <script setup>
 import ActionButton from '../../labThingsComponents/actionButton.vue'
 import PropertyControl from '../../labThingsComponents/propertyControl.vue'
+import { onMounted } from 'vue'
+
+const props = defineProps({
+  roi_x: {
+    type: Number,
+    required: true,
+  },
+  roi_y: {
+    type: Number,
+    required: true,
+  },
+})
+
+onMounted(() => {
+  console.log(props.roi_x, props.roi_y)
+})
 </script>

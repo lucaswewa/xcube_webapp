@@ -105,6 +105,11 @@ const props = defineProps({
     default: undefined,
     required: false,
   },
+  autoRefresh: {
+    type: Number,
+    default: 0,
+    required: false,
+  },
 })
 
 const state = reactive({
@@ -183,6 +188,10 @@ onMounted(() => {
   // the app is reloaded (e.g. from a dev server).
   if (state.value == undefined) {
     readProperty()
+  }
+
+  if (props.autoRefresh > 0) {
+    setInterval(readProperty, props.autoRefresh)
   }
 })
 
