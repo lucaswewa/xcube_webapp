@@ -30,12 +30,12 @@ useResizeObserver(clickFrame, (entries) => {
   console.log(`width: ${width}\nheight: ${height}`)
   emit('resized', {
     width: width,
-    height: height
+    height: height,
   })
 })
 
 const state = reactive({
-  isVisible: false
+  isVisible: false,
 })
 
 const streamImgUri = computed(() => {
@@ -47,7 +47,7 @@ onMounted(() => {
   // emit('resized', { width: })
 })
 function visibilityChanged(isVisible) {
-  state.isVisible = isVisible;
+  state.isVisible = isVisible
 }
 </script>
 
