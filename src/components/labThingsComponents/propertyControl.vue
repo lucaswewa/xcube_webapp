@@ -16,6 +16,22 @@
         </a>
       </div>
     </label>
+    <label v-if="dataType == 'string'" class="uk-form-label"
+      >{{ props.label }}
+      <div class="input-and-buttons-container">
+        <input
+          v-model="state.value"
+          class="uk-form-small numeric-setting-line-input"
+          type="string"
+          @focusin="focusIn"
+          @focusout="focusOut"
+          @keydown="keyDown"
+        />
+        <a class="button-next-to-input" @click="readProperty">
+          <span class="material-symbols-outlined">refresh</span>
+        </a>
+      </div>
+    </label>
     <div v-if="dataType == 'boolean'" class="input-and-buttons-container">
       <label class="uk-form-label numeric-setting-line-input">
         <input
@@ -161,6 +177,9 @@ const dataType = computed(() => {
   }
   if (prop.value.type == 'boolean') {
     return 'boolean'
+  }
+  if (prop.value.type == 'string') {
+    return 'string'
   }
   if (prop.value.type == 'object') {
     let numeric = true

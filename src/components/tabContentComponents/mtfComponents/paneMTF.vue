@@ -69,6 +69,12 @@
               thing-name="tester"
               :read-back-delay="1000"
             />
+            <PropertyControl
+              label="Desc"
+              property-name="img_desc"
+              thing-name="tester"
+              :read-back-delay="1000"
+            />
           </div>
         </li>
       </ul>
@@ -76,7 +82,7 @@
         <action-button
           ref="captureButton"
           thing="tester"
-          action="move_absolute"
+          action="capture"
           :submit-label="'Capture and Calculate'"
         />
       </p>

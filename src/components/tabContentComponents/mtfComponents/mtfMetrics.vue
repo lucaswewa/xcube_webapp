@@ -32,8 +32,8 @@
                     :config="{
                       x: rect_x,
                       y: rect_y,
-                      width: 80,
-                      height: 80,
+                      width: 120,
+                      height: 120,
                       stroke: 'white',
                     }"
                   />
@@ -87,8 +87,8 @@ const updateSize = () => {
 onMounted(async () => {
   updateSize()
   const position = await wotStore.readThingProperty('camera', 'roi_pos')
-  rect_x.value = position[0] - 40
-  rect_y.value = position[1] - 40
+  rect_x.value = position[0] - 60
+  rect_y.value = position[1] - 60
 })
 
 function onStreamResized(evt) {
@@ -102,8 +102,8 @@ const handleMouseDown = (e) => {
   const y = pos.y / scale.value
   lines.value.push({ tool: tool.value, points: [x, y] })
   console.log('mouse down: ', x, y)
-  rect_x.value = x - 40
-  rect_y.value = y - 40
+  rect_x.value = x - 60
+  rect_y.value = y - 60
 }
 
 const handleMouseMove = (e) => {}

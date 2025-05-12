@@ -16,4 +16,7 @@ export default defineConfig({
   build: {
     outDir: path.join(__dirname, 'dist'),
   },
+  server: {
+    host: '192.168.1.11',
+  },
 })

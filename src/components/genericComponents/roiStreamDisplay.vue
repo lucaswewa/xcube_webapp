@@ -40,7 +40,7 @@ const state = reactive({
 
 const streamImgUri = computed(() => {
   // return `${this.$store.getters.baseUri}/camera/mjpeg_stream`;
-  return 'http://localhost:5000/camera/roi_stream'
+  return 'http://192.168.1.11:5000/camera/roi_stream'
 })
 
 onMounted(() => {
