@@ -80,7 +80,11 @@
 // Nav
 //
 
-@nav-header-font-size: 12px;
+@nav-header-font-size: 16px;
+.uk-nav-header{
+    text-transform:none;
+}
+
 
 //
 // Subnav
@@ -201,8 +205,19 @@ h4, .uk-h4 {
     box-shadow: @small-shadow;
 }
 
+.uk-card-title {
+    margin: 0;
+    width: 240px;
+}
+
+.uk-card-body {
+    padding: 20px 16px 8px 16px;
+    width: 240px;
+}
+
 .uk-card-media-top img {
-    border-radius: @paper-border-radius @paper-border-radius 0 0;
+    width: 240px;
+    margin: 0 auto;
 }
 
 .uk-card-default .uk-card-footer {
@@ -304,7 +319,7 @@ h4, .uk-h4 {
         color: @notification-message-danger-color;
         border-color: @notification-message-danger-color
     }
-    
+
     .uk-alert-warning {
         color: @notification-message-warning-color;
         border-color: @notification-message-warning-color
@@ -332,6 +347,11 @@ a:hover {
     a:hover {
         color: @inverse-primary-muted-color;
     }
+
+    .uk-alert-success{
+        color: rgba(28, 131, 45);
+        background-color: rgba(130, 221, 145, 0.671);
+    }
 }
 
 /*
@@ -342,6 +362,7 @@ a:hover {
     padding: 0 8px;
     border-color: @global-border;
     margin-bottom: 2px;
+    text-transform:none !important;
 }
 
 .uk-button-default {
