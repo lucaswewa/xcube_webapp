@@ -60,7 +60,7 @@ const thisStreamOpen = computed(() => {
 })
 
 const streamImgUri = computed(() => {
-  return `http://192.168.1.11:5000/camera/mjpeg_stream`
+  return `http://localhost:5000/camera/mjpeg_stream`
 })
 
 onMounted(() => {

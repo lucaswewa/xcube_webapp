@@ -31,7 +31,7 @@ onMounted(() => {
   if (localStorage.overrideOrigin) {
     state.newOrigin = localStorage.overrideOrigin
   } else {
-    state.newOrigin = 'http://192.168.1.11:5000'
+    state.newOrigin = 'http://localhost:5000'
   }
 })
 
